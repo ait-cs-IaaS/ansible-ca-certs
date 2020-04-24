@@ -1,0 +1,32 @@
+---
+# tasks file for ca-certs
+- name: Get python 2 and python 3 absolute paths
+  command: which "{{ item }}"
+  register: python_executables
+  failed_when: false
+  changed_when: false
+  loop: "{{ ca_certs_python_executables }}"
+  tags: [install,ca]
+
+- set_fact:
+    python_executables: "{{ python_executables.results | selectattr('rc','equalto', 0) | map(attribute='stdout') | list }}"
+
+- name: Get certifi bundle locations
+  command: "{{ item }} -c '{{ ca_certs_certifi_location_command }}'"
+  register: certifi_bundles
+  loop: "{{ python_executables }}"
+  tags: [install,ca]
+
+- set_fact:
+    certifi_bundles: "{{ certifi_bundles.results | selectattr('rc','equalto', 0) | map(attribute='stdout') | list }}"
+
+- name: Update certifi bundles
+  blockinfile:
+    path: "{{ item.0 }}"
+    marker: "# {mark} {{ item.1 | basename }}" 
+    state: present 
+    block: "{{ lookup('file', item.1) }}"
+  loop: "{{ certifi_bundles|product(ca_certs)|list }}"
+  become: yes
+  tags: [install,ca]
+        

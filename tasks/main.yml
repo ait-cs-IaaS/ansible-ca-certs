@@ -1,0 +1,31 @@
+---
+# tasks file for ca-certs
+- name: Ensure CA destination directory exists
+  become: yes
+  file:
+    path: "{{ ca_certs_dest }}" 
+    state: directory 
+    group: "{{ ca_certs_user }}" 
+    owner: "{{ ca_certs_group }}"
+  loop: "{{ ca_certs }}"
+  loop_control:
+    loop_var: ca
+  tags: [install,ca]
+
+- name: Add ca certificates
+  become: yes
+  copy:
+    dest: "{{ ca_certs_dest }}/{{ ca | basename }}" 
+    src: "{{ ca }}" 
+    group: "{{ ca_certs_user }}" 
+    owner: "{{ ca_certs_group }}"
+    mode: "0644"  
+  notify: update_certs
+  loop: "{{ ca_certs }}"
+  loop_control:
+    loop_var: ca
+  tags: [install,ca]
+
+- include_tasks: python.yml
+  when: ca_certs_update_certifi|bool
+  
