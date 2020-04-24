@@ -1,5 +1,11 @@
 ---
 # tasks file for ca-certs
+- name: Ensure pip is installed 
+  apt:
+    name: "{{ ca_certs_pip_packages }}"
+    state: present
+  become: yes
+
 - name: Ensure the requests library is installed for python
   pip: 
     name: requests
