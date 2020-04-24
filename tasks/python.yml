@@ -15,9 +15,6 @@
   become: yes
   tags: [install,ca]
 
-- set_fact:
-    python_executables: "{{ python_executables.results | selectattr('rc','equalto', 0) | map(attribute='stdout') | list }}"
-
 - name: Get certifi bundle locations
   command: "{{ item }} -c '{{ ca_certs_certifi_location_command }}'"
   register: certifi_bundles
