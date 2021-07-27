@@ -1,6 +1,6 @@
 # Ansible-Role: ca-certs
 
-Installs CA Certificates 
+Manage Certificate Authorities on Linux
 
 ## Requirements
 
