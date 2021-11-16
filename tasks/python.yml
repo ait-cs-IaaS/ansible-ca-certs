@@ -1,7 +1,6 @@
 ---
-# tasks file for ca-certs
 - name: Ensure pip is installed 
-  apt:
+  package:
     name: "{{ ca_certs_pip_packages }}"
     state: present
   become: yes
@@ -33,4 +32,4 @@
   loop: "{{ certifi_bundles|product(ca_certs)|list }}"
   become: yes
   tags: [install,ca]
-        
+

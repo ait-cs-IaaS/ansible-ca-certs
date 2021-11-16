@@ -8,14 +8,13 @@ ca_certs_update: /usr/sbin/update-ca-certificates
 ca_certs: []
 ca_certs_update_certifi: no
 ca_certs_python_executables:
-    - python2
-    - python3
+  - python2
+  - python3
 
 ca_certs_pip_packages:
-    - python-pip
-    - python3-pip
+  - python3-pip
     
 ca_certs_pip_executables:
-    - pip2
-    - pip3
+  - pip
+
 ca_certs_certifi_location_command: import requests; print(requests.certs.where())
