@@ -1,31 +1,35 @@
 ---
-# tasks file for ca-certs
+
+- name: Load a varfile based on the OS
+  include_vars:
+    file: "{{ ansible_os_family }}.yml"
+
 - name: Ensure CA destination directory exists
-  become: yes
+  become: true
   file:
-    path: "{{ ca_certs_dest }}" 
-    state: directory 
-    group: "{{ ca_certs_user }}" 
+    path: "{{ ca_certs_dest }}"
+    state: directory
+    group: "{{ ca_certs_user }}"
     owner: "{{ ca_certs_group }}"
+    mode: 0755
   loop: "{{ ca_certs }}"
   loop_control:
     loop_var: ca
-  tags: [install,ca]
+  tags: [install, ca]
 
 - name: Add ca certificates
-  become: yes
+  become: true
   copy:
-    dest: "{{ ca_certs_dest }}/{{ ca | basename }}" 
-    src: "{{ ca }}" 
-    group: "{{ ca_certs_user }}" 
+    dest: "{{ ca_certs_dest }}/{{ ca | basename }}"
+    src: "{{ ca }}"
+    group: "{{ ca_certs_user }}"
     owner: "{{ ca_certs_group }}"
-    mode: "0644"  
+    mode: "0644"
   notify: update_certs
   loop: "{{ ca_certs }}"
   loop_control:
     loop_var: ca
-  tags: [install,ca]
+  tags: [install, ca]
 
 - include_tasks: python.yml
   when: ca_certs_update_certifi|bool
-  

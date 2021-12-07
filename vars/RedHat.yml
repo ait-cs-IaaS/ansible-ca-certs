@@ -1,0 +1,3 @@
+---
+ca_certs_update: /bin/update-ca-trust
+ca_certs_dest: /etc/pki/ca-trust/source/anchors/

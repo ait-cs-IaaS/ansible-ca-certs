@@ -1,35 +1,36 @@
 ---
-- name: Ensure pip is installed 
+- name: Ensure pip is installed
   package:
     name: "{{ ca_certs_pip_packages }}"
     state: present
-  become: yes
+  become: true
 
 - name: Ensure the requests library is installed for python
-  pip: 
+  pip:
     name: requests
     executable: "{{ item }}"
     state: present
   loop: "{{ ca_certs_pip_executables }}"
-  become: yes
-  tags: [install,ca]
+  become: true
+  tags: [install, ca]
 
 - name: Get certifi bundle locations
   command: "{{ item }} -c '{{ ca_certs_certifi_location_command }}'"
   register: certifi_bundles
   loop: "{{ ca_certs_python_executables }}"
-  tags: [install,ca]
+  changed_when: certifi_bundles.rc == 0
+  tags: [install, ca]
 
-- set_fact:
+- name: set certifi_bundles fact
+  set_fact:
     certifi_bundles: "{{ certifi_bundles.results | selectattr('rc','equalto', 0) | map(attribute='stdout') | list }}"
 
 - name: Update certifi bundles
   blockinfile:
     path: "{{ item.0 }}"
-    marker: "# {mark} {{ item.1 | basename }}" 
-    state: present 
+    marker: "# {mark} {{ item.1 | basename }}"
+    state: present
     block: "{{ lookup('file', item.1) }}"
   loop: "{{ certifi_bundles|product(ca_certs)|list }}"
-  become: yes
-  tags: [install,ca]
-
+  become: true
+  tags: [install, ca]

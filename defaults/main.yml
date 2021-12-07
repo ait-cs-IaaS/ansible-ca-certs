@@ -1,9 +1,6 @@
 ---
-# defaults file for ca-certs
-ca_certs_dest: /usr/local/share/ca-certificates
 ca_certs_user: root
 ca_certs_group: "{{ ca_certs_user }}"
-ca_certs_update: /usr/sbin/update-ca-certificates
 
 ca_certs: []
 ca_certs_update_certifi: no
