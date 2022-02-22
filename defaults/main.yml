@@ -10,6 +10,7 @@ ca_certs_python_executables:
 
 ca_certs_pip_packages:
   - python3-pip
+  - python-pip
     
 ca_certs_pip_executables:
   - pip
