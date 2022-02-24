@@ -4,12 +4,6 @@ ca_certs_group: "{{ ca_certs_user }}"
 
 ca_certs: []
 ca_certs_update_certifi: no
-ca_certs_python_executables:
-  - python2
-  - python3
-
-ca_certs_pip_packages:
-  - python3-pip
     
 ca_certs_pip_executables:
   - pip

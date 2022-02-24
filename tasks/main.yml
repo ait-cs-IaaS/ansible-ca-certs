@@ -1,8 +1,11 @@
 ---
 
 - name: Load a varfile based on the OS
-  include_vars:
-    file: "{{ ansible_os_family }}.yml"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
 
 - name: Ensure CA destination directory exists
   become: true
@@ -33,3 +36,4 @@
 
 - include_tasks: python.yml
   when: ca_certs_update_certifi|bool
+

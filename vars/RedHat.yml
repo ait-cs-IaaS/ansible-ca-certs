@@ -1,3 +1,10 @@
 ---
 ca_certs_update: /bin/update-ca-trust
 ca_certs_dest: /etc/pki/ca-trust/source/anchors/
+
+ca_certs_python_executables:
+  - python3
+
+ca_certs_pip_packages:
+  - python3-pip
+
