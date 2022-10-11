@@ -3,8 +3,8 @@ ca_certs_user: root
 ca_certs_group: "{{ ca_certs_user }}"
 
 ca_certs: []
-ca_certs_update_certifi: no
-    
+ca_certs_update_certifi: false
+
 ca_certs_pip_executables:
   - pip
 

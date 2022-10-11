@@ -1,4 +1,0 @@
----
-# handlers file for ca-certs
-- name: update_certs
-  command: "{{ ca_certs_update }}"
