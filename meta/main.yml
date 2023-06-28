@@ -1,12 +1,12 @@
 ---
 galaxy_info:
-  role_name: ca-certs
-  author: Maximilian Frank
-  description: Certificate Authority management
-  license: GPL-3.0
-  company: Austrian Institute of Technology
+    role_name: ca-certs
+    author: Maximilian Frank
+    description: Certificate Authority management
+    license: GPL-3.0
+    company: Austrian Institute of Technology
 
-  min_ansible_version: "2.9"
+    min_ansible_version: '2.9'
 
-  galaxy_tags: []
+    galaxy_tags: []
 dependencies: []

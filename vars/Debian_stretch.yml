@@ -3,7 +3,7 @@ ca_certs_update: /usr/sbin/update-ca-certificates
 ca_certs_dest: /usr/local/share/ca-certificates
 
 ca_certs_python_executables:
-  - python2
+    - python2
 
 ca_certs_pip_packages:
-  - python-pip
+    - python-pip

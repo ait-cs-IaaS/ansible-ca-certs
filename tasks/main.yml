@@ -1,45 +1,47 @@
 ---
 - name: Load a varfile based on the OS
   ansible.builtin.include_vars:
-    file: "{{ item }}"
+      file: '{{ item }}'
   with_first_found:
-    - "{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml"
-    - "{{ ansible_distribution }}_{{ ansible_distribution_release }}.yml"
-    - "{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}.yml"
+      - '{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml'
+      - '{{ ansible_distribution }}_{{ ansible_distribution_release }}.yml'
+      - '{{ ansible_distribution }}.yml'
+      - '{{ ansible_os_family }}.yml'
 
 - name: Ensure CA destination directory exists
   become: true
   ansible.builtin.file:
-    path: "{{ ca_certs_dest }}"
-    state: directory
-    group: "{{ ca_certs_user }}"
-    owner: "{{ ca_certs_group }}"
-    mode: 0755
-  loop: "{{ ca_certs }}"
+      path: '{{ ca_certs_dest }}'
+      state: directory
+      group: '{{ ca_certs_user }}'
+      owner: '{{ ca_certs_group }}'
+      mode: '0755'
+  loop: '{{ ca_certs }}'
   loop_control:
-    loop_var: ca
+      loop_var: ca
   tags: [install, ca]
 
 - name: Add ca certificates
   become: true
   ansible.builtin.copy:
-    dest: "{{ ca_certs_dest }}/{{ ca | basename }}"
-    src: "{{ ca }}"
-    group: "{{ ca_certs_user }}"
-    owner: "{{ ca_certs_group }}"
-    mode: "0644"
-  loop: "{{ ca_certs }}"
+      dest: '{{ ca_certs_dest }}/{{ ca | basename }}'
+      src: '{{ ca }}'
+      group: '{{ ca_certs_user }}'
+      owner: '{{ ca_certs_group }}'
+      mode: '0644'
+  loop: '{{ ca_certs }}'
   loop_control:
-    loop_var: ca
+      loop_var: ca
   tags: [install, ca]
 
 - name: Update CA Certificate
   become: true
   ansible.builtin.command:
-    cmd: "{{ ca_certs_update }}"
+      cmd: '{{ ca_certs_update }}'
   when: ca_certs_update
+  changed_when: false
 
 - name: Update python certs
-  include_tasks: python.yml
+  ansible.builtin.include_tasks:
+      file: python.yml
   when: ca_certs_update_certifi | bool

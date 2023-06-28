@@ -2,36 +2,38 @@
 - name: Ensure pip is installed
   become: true
   ansible.builtin.apt:
-    name: "{{ ca_certs_pip_packages }}"
-    state: present
+      name: '{{ ca_certs_pip_packages }}'
+      state: present
 
 - name: Ensure the requests library is installed for python
   become: true
   ansible.builtin.pip:
-    name: requests
-    executable: "{{ item }}"
-    state: present
-  loop: "{{ ca_certs_pip_executables }}"
+      name: requests
+      executable: '{{ item }}'
+      state: present
+  loop: '{{ ca_certs_pip_executables }}'
   tags: [install, ca]
 
 - name: Get certifi bundle locations
   ansible.builtin.command:
-    cmd: "{{ item }} -c '{{ ca_certs_certifi_location_command }}'"
+      cmd: "{{ item }} -c '{{ ca_certs_certifi_location_command }}'"
   register: certifi_bundles
-  loop: "{{ ca_certs_python_executables }}"
+  loop: '{{ ca_certs_python_executables }}'
   changed_when: certifi_bundles.rc == 0
   tags: [install, ca]
 
 - name: Set certifi_bundles fact
   ansible.builtin.set_fact:
-    certifi_bundles: "{{ certifi_bundles.results | selectattr('rc', 'equalto', 0) | map(attribute='stdout') | list }}"
+      certifi_bundles:
+          "{{ certifi_bundles.results | selectattr('rc', 'equalto', 0) |
+          map(attribute='stdout') | list }}"
 
 - name: Update certifi bundles
   become: true
   ansible.builtin.blockinfile:
-    path: "{{ item.0 }}"
-    marker: "# {mark} {{ item.1 | basename }}"
-    state: present
-    block: "{{ lookup('file', item.1) }}"
-  loop: "{{ certifi_bundles | product(ca_certs) | list }}"
+      path: '{{ item.0 }}'
+      marker: '# {mark} {{ item.1 | basename }}'
+      state: present
+      block: "{{ lookup('file', item.1) }}"
+  loop: '{{ certifi_bundles | product(ca_certs) | list }}'
   tags: [install, ca]
